@@ -1,0 +1,17 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  - docker --version
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker pull $DOCKER_ORGANIZATION/rpi-debian-casadi:latest
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  - docker build --build-arg DOCKER_ORGANIZATION=$DOCKER_ORGANIZATION -t rpi-debian-acados .
+  - docker tag rpi-debian-casadi $DOCKER_ORGANIZATION/rpi-debian-acados:latest
+
+script:
+  - docker push $DOCKER_ORGANIZATION/rpi-debian-acados:latest
