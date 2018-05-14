@@ -9,12 +9,12 @@ FROM $DOCKER_ORGANIZATION/rpi-debian-casadi:latest
 WORKDIR /home/pi
 
 # Display previous time when swig was installed
-RUN DATE_FILE=date_install_casadi.txt && \
-    if [ -f $DATE_FILE ]; then echo "swig compiled:" && cat $DATE_FILE; fi
+RUN DATE_FILE=date_install_swig.txt && \
+    if [ -f $DATE_FILE ]; then echo "swig compiled on:" && cat $DATE_FILE; fi
 
 # Display previous time when casadi was installed
 RUN DATE_FILE=date_install_casadi.txt && \
-    if [ -f $DATE_FILE ]; then echo "casadi compiled:" && cat $DATE_FILE; fi
+    if [ -f $DATE_FILE ]; then echo "casadi compiled on:" && cat $DATE_FILE; fi
 
 # Update acados source code, already cloned when compiling swig
 RUN cd acados && git pull origin master && git submodule update --recursive --init
@@ -35,8 +35,11 @@ ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib:$HOME/local/lib"
 RUN cd /home/pi/acados/examples/python && \
     python3 -c "import acados"
 
-# Add date for tracing the date of installing
+# Add date for tracing the date of installing acados
 RUN cd /home/pi && date -u '+%F %T %Z' > date_install_acados.txt
+
+# Make port 22 available to the world outside this container
+EXPOSE 22
 
 # Define default command
 CMD ["bash"]
