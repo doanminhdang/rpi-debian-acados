@@ -8,9 +8,8 @@ before_install:
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - docker --version
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker pull $DOCKER_ORGANIZATION/rpi-debian-casadi:latest
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  - docker build --build-arg DOCKER_ORGANIZATION=$DOCKER_ORGANIZATION -t rpi-debian-acados .
+  - docker build --build-arg DOCKER_ORGANIZATION=$DOCKER_ORGANIZATION --build-arg CASADI_IMAGE_TAG=$CASADI_IMAGE_TAG -t rpi-debian-acados .
   - docker tag rpi-debian-acados $DOCKER_ORGANIZATION/rpi-debian-acados:latest
 
 script:

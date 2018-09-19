@@ -1,9 +1,10 @@
 # Get environment variables, default is the author's username
 # Need docker >= 17.0.5 in order to accept ARG before FROM
 ARG DOCKER_ORGANIZATION=doanminhdang
+ARG CASADI_IMAGE_TAG=latest
 
 # Pull base image with casadi precompiled
-FROM $DOCKER_ORGANIZATION/rpi-debian-casadi:latest
+FROM $DOCKER_ORGANIZATION/rpi-debian-casadi:$CASADI_IMAGE_TAG
 
 # Define working directory
 WORKDIR /home/pi
@@ -18,7 +19,7 @@ RUN DATE_FILE=date_install_casadi.txt && \
 
 # Update acados source code, already cloned when compiling swig
 WORKDIR /home/pi/acados
-RUN git pull origin master
+RUN git pull
 RUN git submodule update --recursive --init
 
 # Compile acados with Python interface
@@ -26,7 +27,7 @@ RUN git submodule update --recursive --init
 RUN cd /home/pi/acados && \
     rm -rf build && mkdir build && \
     cd build && \
-    cmake -D SWIG_MATLAB=0 -D SWIG_PYTHON=1 .. && \
+    cmake -DCMAKE_BUILD_TYPE=Debug -D SWIG_MATLAB=0 -D SWIG_PYTHON=1 .. && \
     make install
 
 # Set environment variables for acados lib, note that user is root
