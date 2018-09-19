@@ -17,7 +17,9 @@ RUN DATE_FILE=date_install_casadi.txt && \
     if [ -f $DATE_FILE ]; then echo "casadi compiled on:" && cat $DATE_FILE; fi
 
 # Update acados source code, already cloned when compiling swig
-RUN cd acados && git pull origin master && git submodule update --recursive --init
+WORKDIR /home/pi/acados
+RUN git pull origin master
+RUN git submodule update --recursive --init
 
 # Compile acados with Python interface
 # Note that supporting packages were installed when compiling swig
