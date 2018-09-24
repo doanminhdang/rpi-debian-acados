@@ -27,12 +27,12 @@ RUN git submodule update --recursive --init
 RUN cd /home/pi/acados && \
     rm -rf build && mkdir build && \
     cd build && \
-    cmake -DCMAKE_BUILD_TYPE=Debug -D SWIG_MATLAB=0 -D SWIG_PYTHON=1 .. && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=OFF -D SWIG_MATLAB=0 -D SWIG_PYTHON=1 .. && \
     make install
 
 # Set environment variables for acados lib, note that user is root
-ENV PYTHONPATH="${PYTHONPATH}:${HOME}/local/lib"
-ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib:$HOME/local/lib"
+ENV PYTHONPATH="${HOME}/local/lib:${PYTHONPATH}"
+ENV LD_LIBRARY_PATH="/usr/local/lib:$HOME/local/lib:${LD_LIBRARY_PATH}"
 
 # Test
 RUN cd /home/pi/acados/examples/python && \
